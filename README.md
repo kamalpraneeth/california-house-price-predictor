@@ -1,4 +1,4 @@
-# Deployed ML Prediction Service
+# California House Price Predictor
 
 A complete Machine Learning portfolio project featuring data preprocessing, model training, a FastAPI backend, and a web UI. The service predicts California house prices based on various neighborhood features.
 
@@ -76,3 +76,6 @@ curl -X POST "http://localhost:8000/predict" \
 ```json
 {"prediction": 4.1352}
 ```
+
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
