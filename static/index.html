@@ -1,0 +1,150 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>California Housing Price Predictor</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body class="is-preload">
+		<!-- Header -->
+			<header id="header">
+				<div class="inner">
+					<a href="#" class="image avatar"><img src="images/avatar.jpg" alt="" /></a>
+					<h1><strong>House Price Predictor</strong><br />
+					California Housing Dataset<br />
+					Portfolio Project</h1>
+				</div>
+			</header>
+
+		<!-- Main -->
+			<div id="main">
+				<section id="one">
+					<header class="major">
+						<h2>Predict California House Prices</h2>
+					</header>
+					<p>Enter the features of the neighborhood below to predict the median house value.</p>
+					
+					<form id="prediction-form">
+						<div class="row gtr-uniform gtr-50">
+							<div class="col-6 col-12-xsmall">
+								<label>Median Income (in tens of thousands)</label>
+								<input type="number" step="any" name="MedInc" id="MedInc" value="8.3252" required />
+							</div>
+							<div class="col-6 col-12-xsmall">
+								<label>House Age</label>
+								<input type="number" step="any" name="HouseAge" id="HouseAge" value="41.0" required />
+							</div>
+							<div class="col-6 col-12-xsmall">
+								<label>Average Rooms</label>
+								<input type="number" step="any" name="AveRooms" id="AveRooms" value="6.9841" required />
+							</div>
+							<div class="col-6 col-12-xsmall">
+								<label>Average Bedrooms</label>
+								<input type="number" step="any" name="AveBedrms" id="AveBedrms" value="1.0238" required />
+							</div>
+							<div class="col-6 col-12-xsmall">
+								<label>Population</label>
+								<input type="number" step="any" name="Population" id="Population" value="322.0" required />
+							</div>
+							<div class="col-6 col-12-xsmall">
+								<label>Average Occupancy</label>
+								<input type="number" step="any" name="AveOccup" id="AveOccup" value="2.5555" required />
+							</div>
+							<div class="col-6 col-12-xsmall">
+								<label>Latitude</label>
+								<input type="number" step="any" name="Latitude" id="Latitude" value="37.88" required />
+							</div>
+							<div class="col-6 col-12-xsmall">
+								<label>Longitude</label>
+								<input type="number" step="any" name="Longitude" id="Longitude" value="-122.23" required />
+							</div>
+							<div class="col-12">
+								<ul class="actions">
+									<li><input type="submit" value="Predict Price" class="primary" /></li>
+								</ul>
+							</div>
+						</div>
+					</form>
+					
+					<div id="result-area" style="margin-top: 2em; display: none;">
+						<h3>Prediction Result:</h3>
+						<p id="prediction-output" style="font-size: 1.5em; font-weight: bold; color: #49bf9d;"></p>
+					</div>
+				</section>
+			</div>
+
+		<!-- Footer -->
+			<footer id="footer">
+				<div class="inner">
+					<ul class="copyright">
+						<li>&copy; Portfolio Project</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.poptrox.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+			
+			<script>
+				document.getElementById('prediction-form').addEventListener('submit', async function(e) {
+					e.preventDefault();
+					
+					const data = {
+						MedInc: parseFloat(document.getElementById('MedInc').value),
+						HouseAge: parseFloat(document.getElementById('HouseAge').value),
+						AveRooms: parseFloat(document.getElementById('AveRooms').value),
+						AveBedrms: parseFloat(document.getElementById('AveBedrms').value),
+						Population: parseFloat(document.getElementById('Population').value),
+						AveOccup: parseFloat(document.getElementById('AveOccup').value),
+						Latitude: parseFloat(document.getElementById('Latitude').value),
+						Longitude: parseFloat(document.getElementById('Longitude').value)
+					};
+					
+					try {
+						const response = await fetch('/predict', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							body: JSON.stringify(data)
+						});
+						
+						const result = await response.json();
+						
+						const resultArea = document.getElementById('result-area');
+						const output = document.getElementById('prediction-output');
+						
+						if (response.ok) {
+							// The target is usually in 100,000s in the California housing dataset
+							const price = result.prediction * 100000;
+							output.textContent = "Estimated Value: $" + price.toLocaleString(undefined, {maximumFractionDigits: 2});
+							output.style.color = "#49bf9d";
+						} else {
+							let errStr = "Failed to predict";
+							if (result.detail) {
+								if (Array.isArray(result.detail)) {
+									errStr = result.detail.map(e => `${e.loc.join('.')}: ${e.msg}`).join(', ');
+								} else {
+									errStr = result.detail;
+								}
+							}
+							output.textContent = "Error: " + errStr;
+							output.style.color = "red";
+						}
+						
+						resultArea.style.display = 'block';
+					} catch (error) {
+						console.error('Error:', error);
+						alert('An error occurred. Check the console.');
+					}
+				});
+			</script>
+
+	</body>
+</html>
