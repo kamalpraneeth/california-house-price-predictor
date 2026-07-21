@@ -4,6 +4,8 @@ A complete Machine Learning portfolio project featuring data preprocessing, mode
 
 ## Problem Statement
 The goal is to build a regression model to estimate the median house value for California districts, given features like median income, house age, average rooms, and geographical location. This demonstrates an end-to-end ML workflow from data to a deployed REST API.
+## Demo UI
+![Demo UI Screenshot](static/images/demo_screenshot.png)
 
 ## Dataset
 - **Source**: [California Housing Dataset](https://scikit-learn.org/stable/datasets/real_world.html#california-housing-dataset) (built-in via `scikit-learn`)
