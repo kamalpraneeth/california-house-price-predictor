@@ -17,6 +17,11 @@ A `RandomForestRegressor` was trained and evaluated on a 20% test split:
 - **RMSE**: 0.5449
 - **R²**: 0.7734
 
+## Design Decisions
+| Decision | Rationale |
+| -------- | --------- |
+| Reduced model size (`n_estimators=50`, `max_depth=10`) | Keeps `model.joblib` under GitHub's 100MB file limit so it can be committed directly; minor accuracy tradeoff vs. an unrestricted forest, verified acceptable via RMSE/R² on the test set |
+
 ## Running Locally
 
 1. **Install Dependencies**:
@@ -74,7 +79,7 @@ curl -X POST "http://localhost:8000/predict" \
 ```
 **Response**:
 ```json
-{"prediction": 4.1352}
+{"prediction": 4.3033}
 ```
 
 ## License
